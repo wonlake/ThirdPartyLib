@@ -45,8 +45,38 @@ cmakelists_fd.write(r'project(${ProjectName})' + "\n\n")
 cmakelists_fd.write(r'# 用于包含子项目' + "\n")
 cmakelists_fd.write(r'# add_subdirectory(subfolder)' + "\n\n")
 
-cmakelists_fd.write(r'include_directories(include)' + "\n")
-cmakelists_fd.write(r'aux_source_directory(src SRC_LIST)' + "\n\n")
+cmakelists_fd.write(r'include_directories(include)' + "\n\n")
+cmakelists_fd.write(r'aux_source_directory(src SRC_LIST)' + "\n")
+
+pipe = os.popen("chdir")
+base_dir = pipe.readline().strip().replace("\\", "/") + "/" + root
+pipe.close()
+print(base_dir)
+
+pipe = os.popen("dir /B /S /AD " + root + "\\src")
+
+count = 0
+dirs = []
+for sub_dir in pipe.readlines():
+    subdir_name = sub_dir.strip()
+    pipe2 = os.popen("dir /B /A-D " + subdir_name)
+    for file in pipe2.readlines():
+        file_name = file.strip()
+        if re.search("\.((cpp)|(c)|(cxx))$", file_name, re.I):
+            count = count + 1
+            subdir_name = subdir_name.replace("\\", "/")
+            src_dir2 = re.sub(base_dir + "/", "", subdir_name)
+            dirs.append(src_dir2)
+            break
+			
+for i in range(count):
+    cmakelists_fd.write("aux_source_directory(%s SRC_LIST%d)\n" % (dirs[i], i))
+
+strList = "${SRC_LIST}"
+for i in range(count):
+    strList += " $SRC_LIST{%d}" % i 
+cmakelists_fd.write("\nset(SRC_LIST %s)\n\n" % strList)
+pipe.close()
 
 cmakelists_fd.write(r'file(GLOB_RECURSE INC_LIST "*.h")' + "\n\n")
 
