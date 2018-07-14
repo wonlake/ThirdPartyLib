@@ -74,7 +74,7 @@ for i in range(count):
 
 strList = "${SRC_LIST}"
 for i in range(count):
-    strList += " $SRC_LIST{%d}" % i 
+    strList += " ${SRC_LIST%d}" % i 
 cmakelists_fd.write("\nset(SRC_LIST %s)\n\n" % strList)
 pipe.close()
 
