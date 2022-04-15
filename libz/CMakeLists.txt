@@ -20,7 +20,7 @@ file(GLOB_RECURSE INC_LIST "*.h")
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 
 list(FILTER SRC_LIST EXCLUDE REGEX "example.c")
-list(FILTER SRC_LIST EXCLUDE REGEX "mingzip.c")
+list(FILTER SRC_LIST EXCLUDE REGEX "minigzip.c")
 
 add_library(${ProjectName} STATIC ${SRC_LIST} ${INC_LIST})
 
