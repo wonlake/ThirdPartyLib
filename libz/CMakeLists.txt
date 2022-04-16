@@ -19,6 +19,12 @@ file(GLOB_RECURSE INC_LIST "*.h")
 
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+	
 list(FILTER SRC_LIST EXCLUDE REGEX "example.c")
 list(FILTER SRC_LIST EXCLUDE REGEX "minigzip.c")
 

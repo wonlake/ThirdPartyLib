@@ -9,6 +9,12 @@ project(${ProjectName})
 # 用于包含子项目
 # add_subdirectory(subfolder)
 
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+	
 include_directories(include)
 aux_source_directory(src SRC_LIST)
 aux_source_directory(src/dec SRC_LIST1)

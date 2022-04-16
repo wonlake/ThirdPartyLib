@@ -18,6 +18,14 @@ file(GLOB_RECURSE INC_LIST "*.h")
 # 编译选项
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+set(CMAKE_DEBUG_POSTFIX "_d")
+
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 add_definitions(-DILUT_EXPORTS)
 
@@ -25,7 +33,7 @@ link_directories("${CMAKE_CURRENT_SOURCE_DIR}/../build/lib")
 
 add_library(${ProjectName} SHARED ${SRC_LIST} ${INC_LIST} src/ilut.def)
 
-set(LINK_LIB libil.lib libilu.lib)
+set(LINK_LIB libil$<$<CONFIG:Debug>:_d>.lib libilu$<$<CONFIG:Debug>:_d>.lib)
 target_link_libraries(${ProjectName} "${LINK_LIB}")
 
 set_target_properties(${ProjectName} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../lib) # 指定静态库输出路径

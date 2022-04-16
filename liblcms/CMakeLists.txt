@@ -17,6 +17,12 @@ file(GLOB_RECURSE INC_LIST "*.h")
 # 编译选项
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 
 add_library(${ProjectName} STATIC ${SRC_LIST} ${INC_LIST})

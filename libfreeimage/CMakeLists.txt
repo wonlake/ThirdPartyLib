@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.6)
+cmake_minimum_required (VERSION 3.15)
 
 # CMake命令行使用 -DCMAKE_BUILD_TYPE生成相应配置
 # 可取枚举值：Debug | Release | RelWithDebInfo | MinSizeRel
@@ -36,30 +36,38 @@ file(GLOB_RECURSE INC_LIST "*.h")
 
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 add_definitions(-DOPJ_STATIC)
-#add_definitions(-DFREEIMAGE_EXPORTS)
+add_definitions(-DFREEIMAGE_EXPORTS)
 add_definitions(-DLIBRAW_NODLL)
-add_definitions(-DFREEIMAGE_LIB)
 
-link_directories("${CMAKE_CURRENT_SOURCE_DIR}/../build/lib")
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+	
+set(CMAKE_DEBUG_POSTFIX "_d")
 
-add_library(${ProjectName} STATIC ${SRC_LIST} ${INC_LIST})
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/../build/lib") 
+
+add_library(${ProjectName} SHARED ${SRC_LIST} ${INC_LIST})
 set(LINK_LIB libz.lib libpng.lib libjpeg.lib libwebp.lib libtiff4.lib libjxr.lib libopenjpeg.lib libraw.lib libopenexr.lib)
 target_link_libraries(${ProjectName} "${LINK_LIB}")
 
 if(MSVC)
     find_program(lib_tool lib)
 
-    add_custom_command(TARGET ${ProjectName}
-	  PRE_BUILD 
-	  COMMAND ${CMAKE_COMMAND} -E rm -f ${ProjectName}.lib 
-	  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>
-	)
+    #add_custom_command(TARGET ${ProjectName}
+	#  PRE_BUILD 
+	#  COMMAND echo ${CMAKE_MSVC_RUNTIME_LIBRARY}
+	#  COMMAND ${CMAKE_COMMAND} -E rm -f ${ProjectName}.lib 
+	#  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>
+	#)
 
-    add_custom_command(TARGET ${ProjectName}
-	  POST_BUILD 
-	  COMMAND ${lib_tool} /NOLOGO /OUT:${ProjectName}.lib ${ProjectName}.lib ${LINK_LIB}
-	  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>
-      )
+    #add_custom_command(TARGET ${ProjectName}
+	#  POST_BUILD 
+	#  COMMAND ${lib_tool} /NOLOGO /OUT:${ProjectName}.lib ${ProjectName}.lib ${LINK_LIB}
+	#  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>
+    #  )
 else()
 endif()
 

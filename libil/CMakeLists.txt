@@ -25,6 +25,14 @@ file(GLOB_RECURSE INC_LIST "*.h")
 # 编译选项
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+set(CMAKE_DEBUG_POSTFIX "_d")
+
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+
 add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 add_definitions(-D_WINDOWS)
 add_definitions(-DIL_EXPORTS)

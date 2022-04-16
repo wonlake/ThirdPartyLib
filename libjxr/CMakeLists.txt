@@ -9,6 +9,12 @@ project(${ProjectName})
 # 用于包含子项目
 # add_subdirectory(subfolder)
 
+add_compile_options( 
+	$<$<CONFIG:>:/MT>
+	$<$<CONFIG:Debug>:/MTd>
+	$<$<CONFIG:Release>:/MD>
+)
+	
 include_directories(include)
 include_directories(include/jxrgluelib)
 include_directories(include/image/sys)
